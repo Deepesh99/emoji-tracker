@@ -6,6 +6,8 @@ const app = express();
 
 const routesIndexV1 = require('./routes/v1/routeindex');
 
+app.use(express.json());
+
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
