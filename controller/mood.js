@@ -58,9 +58,33 @@ exports.moodLog = async (req, res) => {
 };
 
 exports.moodUpdate = async (req, res) => {
+    try {
+        const emoji_id = req.params.id;
+        const { emoji, notes } = req.body;
+        const mood = await Emoji.findOne({emoji_id});
+        const moodUpdate = await mood.update({emoji, notes});
+        if(moodUpdate) {
+            return res.status(201).json({ status: true, message: 'Mood Updated' });    
+        }
+        return res.status(400).json({ status: true, message: 'Updation Failed' });
 
+    }catch(err) {
+        console.log(err);
+        return res.status(500).json({ status: false, message: 'Server Error' });
+    }
 };
 
 exports.moodDelete = async (req, res) => {
+    try {
+        const { emoji_id } = req.body;
 
+        const deletedMood = await Emoji.destroy({ where:{emoji_id} });
+        if(deletedMood) {
+            return res.status(201).json({ status: true, message: 'Mood Deleted' });    
+        }
+        return res.status(400).json({ status: true, message: 'Deletion Failed' });
+    } catch(err) {
+        console.log(err);
+        return res.status(500).json({ status: false, message: 'Server Error' });
+    }
 };

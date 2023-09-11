@@ -7,8 +7,8 @@ const { moodSummary, moodLog, moodUpdate, moodDelete } = require('../../controll
 router
 .get('/summary', moodSummary)
 .post('/log', moodLog)
-// .patch('/update', moodUpdate)
-// .delete('/delete', moodDelete)
+.put('/update/:id', moodUpdate)
+.delete('/delete', moodDelete)
 .get('/', (req,res)=> {
     res.send("API under constrcution");
 })
