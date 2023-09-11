@@ -2,6 +2,15 @@ const express = require('express');
 
 const db = require('./config/db');
 
+const User = require('./schema/user');
+const Emoji = require('./schema/emoji');
+
+User.hasMany(Emoji, {
+    onDelete: 'CASCADE',
+    foreignKey: 'userId',
+});
+// Emoji.hasOne(User);
+
 const app = express();
 
 const routesIndexV1 = require('./routes/v1/routeindex');

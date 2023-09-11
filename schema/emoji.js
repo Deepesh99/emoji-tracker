@@ -1,25 +1,29 @@
 const { Sequelize } = require('sequelize');
 const sequelize = require('../config/db');
 
-const User = sequelize.define('user', {
-  user_id: {
+const Emoji = sequelize.define('emoji', {
+  emoji_id: {
     type: Sequelize.INTEGER,
     primaryKey: true,
     autoIncrement: true,
   },
-  name: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  password: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
   userName: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  date: {
+    type: Sequelize.DATE,
+    allowNull: false,
+  },
+  emoji: {
     type: Sequelize.STRING,
     allowNull: false,
     unique: true,
   },
+  notes: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  }
 });
 
-module. exports = User;
+module.exports = Emoji;
