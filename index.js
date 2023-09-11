@@ -7,7 +7,7 @@ const Emoji = require('./schema/emoji');
 
 User.hasMany(Emoji, {
     onDelete: 'CASCADE',
-    foreignKey: 'userId',
+    foreignKey: 'userName',
 });
 // Emoji.hasOne(User);
 

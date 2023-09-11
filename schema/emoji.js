@@ -7,10 +7,6 @@ const Emoji = sequelize.define('emoji', {
     primaryKey: true,
     autoIncrement: true,
   },
-  userName: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
   date: {
     type: Sequelize.DATE,
     allowNull: false,
@@ -18,7 +14,6 @@ const Emoji = sequelize.define('emoji', {
   emoji: {
     type: Sequelize.STRING,
     allowNull: false,
-    unique: true,
   },
   notes: {
     type: Sequelize.STRING,

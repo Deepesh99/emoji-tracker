@@ -2,10 +2,9 @@ const { Sequelize } = require('sequelize');
 const sequelize = require('../config/db');
 
 const User = sequelize.define('user', {
-  user_id: {
-    type: Sequelize.INTEGER,
+  userName: {
+    type: Sequelize.STRING,
     primaryKey: true,
-    autoIncrement: true,
   },
   name: {
     type: Sequelize.STRING,
@@ -14,11 +13,6 @@ const User = sequelize.define('user', {
   password: {
     type: Sequelize.STRING,
     allowNull: false,
-  },
-  userName: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    unique: true,
   },
 });
 
