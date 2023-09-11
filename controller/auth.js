@@ -1,5 +1,5 @@
 const bcrypt = require('bcryptjs');
-// const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 
 const User = require('../schema/user');
 
@@ -35,25 +35,25 @@ exports.register = async (req, res) => {
   }
 };
 
-// exports.login = async (req, res) => {
-//   const { email, password } = req.body;
+exports.login = async (req, res) => {
+  const { userName, password } = req.body;
 
-//   try {
-//     const user = await UserAuth.findOne({ where: { email } });
-//     const validUser = await bcrypt.compare(password, user.password);
+  try {
+    const user = await User.findOne({ where: { userName } });
+    const validUser = await bcrypt.compare(password, user.password);
 
-//     if (user && validUser) {
-//       // create jwt tokens
-//       // scret is used to create hash. TODO: encrypt secret
-//       const secret = 'thisisjwttoken12345';
+    if (user && validUser) {
+      // create jwt tokens
+      // scret is used to create hash. TODO: encrypt secret
+      const secret = 'thisisjwttoken12345';
 
-//       // token will have userid and expire in 30days
-//       const token = jwt.sign({ userid: user.id }, secret, { expiresIn: '7 days' });
-//       return res.status(200).json({ status: true, message: 'Login Success!!', token });
-//     }
+      // token will have userid and expire in 30days
+      const token = jwt.sign({ userName }, secret, { expiresIn: '7 days' });
+      return res.status(200).json({ status: true, message: 'Login Success!!', token });
+    }
 
-//     return res.status(401).json({ status: false, message: 'Email or Password is incorrect' });
-//   } catch (err) {
-//     return res.status(401).json({ status: false, message: 'Server Error' });
-//   }
-// };
+    return res.status(401).json({ status: false, message: 'Email or Password is incorrect' });
+  } catch (err) {
+    return res.status(401).json({ status: false, message: 'Server Error' });
+  }
+};
