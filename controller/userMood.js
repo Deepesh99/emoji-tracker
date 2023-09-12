@@ -1,3 +1,4 @@
+const { Op } = require('sequelize');
 const Mood = require('../schema/mood');
 const User = require('../schema/user');
 
@@ -94,4 +95,56 @@ exports.moodStats = async (req, res) => {
         console.log(err);
         return res.status(500).json({ status: false, message: 'Server Error' });
     }
+}
+
+exports.moodData = async (req,res) => {
+    try {
+        const date = new Date();
+        const firstDay = new Date(date.getFullYear(), date.getMonth(), 1)
+        const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0)
+        const { userName } = res.locals;
+        const mood = await Mood.findAll({
+            attributes: ['emoji','value','createdAt'],
+            where: {
+                userName,
+                createdAt: {
+                    [Op.between]: [firstDay,lastDay]
+                }
+            }
+        });
+        console.log(mood[0].dataValues)
+        let hashMap = {"U+1f62d": 0,"U+2639": 0,"U+1f610": 0,"U+1f603": 0,"U+1f929": 0}
+        for(let i=0; i< mood.length; i++) {
+            if(mood[i].dataValues.emoji in hashMap ){
+        
+                //up the prev count
+                hashMap[mood[i].dataValues.emoji] = hashMap[mood[i].dataValues.emoji] + 1; 
+                
+                }else{
+                hashMap[mood[i].dataValues.emoji] = 1;
+                }
+        }
+        
+        let outputArray = []
+        Object.keys(hashMap).forEach(key => {
+        
+            outputArray.push({
+                key,
+                count: hashMap[key]
+            })
+        })
+        let xValues = [];
+        let yValues = [];
+        for(let i=0;i<outputArray.length;i++) {
+            xValues.push(outputArray[i].key);
+            yValues.push(outputArray[i].count);
+        }
+        if(mood) {
+            return res.status(201).json({ status: true, xValues,yValues });    
+        }
+        return res.status(400).json({ status: true, message: 'Mood retreival failed' });
+    } catch(err) {
+        console.log(err);
+        return res.status(500).json({ status: false, message: 'Server Error' });
+    } 
 }
