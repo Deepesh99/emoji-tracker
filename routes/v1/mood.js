@@ -6,12 +6,13 @@ const { moodSummary, moodLog, moodUpdate, moodDelete } = require('../../controll
 const { authorization } = require('../../middleware/auth');
 
 router
-.get('/summary', authorization, moodSummary)
-.post('/log', authorization, moodLog)
-.put('/update/:id', authorization, moodUpdate)
-.delete('/delete', authorization, moodDelete)
-.get('/', (req,res)=> {
-    res.send("API under constrcution");
-})
+  .get('/summary', authorization, moodSummary)
+  .post('/log', authorization, moodLog)
+  .put('/update/:id', authorization, moodUpdate)
+  .delete('/delete', authorization, moodDelete)
+  .get('/', (req,res)=> {
+      res.send("API under constrcution");
+  })
+ 
 
 module.exports = router;
