@@ -1,6 +1,6 @@
 const { Op } = require('sequelize');
 const User = require('../schema/user');
-const Emoji = require('../schema/emoji');
+const Mood = require('../schema/mood');
 
 exports.moodSummary = async (req, res) => {
     try {
@@ -15,7 +15,7 @@ exports.moodSummary = async (req, res) => {
         const endDate = new Date(y,m).toISOString();
         
         const { userName } = res.locals;
-        const mood = await Emoji.findAll({
+        const mood = await Mood.findAll({
             where: {
                 userName,
                 createdAt: {
@@ -32,21 +32,21 @@ exports.moodSummary = async (req, res) => {
 
     } catch(err) {
         console.log(err);
-        // return res.status(500).json({ status: false, message: 'Server Error' });
+        return res.status(500).json({ status: false, message: 'Server Error' });
     }
 };
 
 exports.moodLog = async (req, res) => {
     const { emoji, notes } = req.body;
-    const { userName } = res.locals;
-
+    const { userName }  = res.locals;
+    const value = 2;
     try {
         console.log(emoji,notes,userName);
-        const newMood = await Emoji.create({
+        const newMood = await Mood.create({
             emoji,
             notes,
-            userName,
-            date: new Date()
+            value,
+            userName
         });
         if(newMood) {
             return res.status(201).json({ status: true, message: 'Mood Logged' });    
@@ -60,9 +60,10 @@ exports.moodLog = async (req, res) => {
 
 exports.moodUpdate = async (req, res) => {
     try {
-        const emoji_id = req.params.id;
+        const mood_id = req.params.id;
         const { emoji, notes } = req.body;
-        const mood = await Emoji.findOne({emoji_id});
+        const mood = await Mood.findOne( {where: {mood_id}});
+        console.log(mood);
         const moodUpdate = await mood.update({emoji, notes});
         if(moodUpdate) {
             return res.status(201).json({ status: true, message: 'Mood Updated' });    
@@ -77,9 +78,9 @@ exports.moodUpdate = async (req, res) => {
 
 exports.moodDelete = async (req, res) => {
     try {
-        const { emoji_id } = req.body;
+        const { mood_id } = req.body;
 
-        const deletedMood = await Emoji.destroy({ where:{emoji_id} });
+        const deletedMood = await Mood.destroy({ where:{mood_id} });
         if(deletedMood) {
             return res.status(201).json({ status: true, message: 'Mood Deleted' });    
         }

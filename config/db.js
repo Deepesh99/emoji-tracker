@@ -1,6 +1,6 @@
 const { Sequelize } = require('sequelize');
 
-const sequelize = new Sequelize('emoji', 'root', 'root', {
+const sequelize = new Sequelize('mood_tracker', 'root', 'root', {
   dialect: 'mysql',
   host: 'localhost',
   define: {

@@ -3,9 +3,9 @@ const express = require('express');
 const db = require('./config/db');
 
 const User = require('./schema/user');
-const Emoji = require('./schema/emoji');
+const Mood = require('./schema/mood');
 
-User.hasMany(Emoji, {
+User.hasMany(Mood, {
     onDelete: 'CASCADE',
     foreignKey: 'userName',
 });
