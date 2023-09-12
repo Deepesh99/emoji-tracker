@@ -1,3 +1,4 @@
+const Sentiment = require('sentiment');
 const { Op } = require('sequelize');
 const User = require('../schema/user');
 const Mood = require('../schema/mood');
@@ -90,3 +91,28 @@ exports.moodDelete = async (req, res) => {
         return res.status(500).json({ status: false, message: 'Server Error' });
     }
 };
+
+exports.getEmoji = async (req,res) =>{
+    try {
+        const {text} = req.body;
+        const sentiment = new Sentiment();
+        const result = sentiment.analyze(text);
+        const score = result.score + 5;
+        let emoji
+        if(score < 2) {
+            emoji = 'U+1f62d';
+        } else if (score < 4) {
+            emoji = 'U+2639';
+        } else if (score < 6) {
+            emoji = 'U+1f610';
+        } else if (score < 18) {
+            emoji = 'U+1f603';
+        } else {
+            emoji = 'U+1f929';
+        }
+        return res.status(200).json({ status: true, message: { emoji} });
+    } catch(err) {
+        console.log(err);
+        return res.status(500).json({ status: false, message: 'Server Error' });
+    }
+}
