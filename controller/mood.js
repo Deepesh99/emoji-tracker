@@ -14,7 +14,7 @@ exports.moodSummary = async (req, res) => {
         const startDate = new Date(y,m-1).toISOString();
         const endDate = new Date(y,m).toISOString();
         
-        const userName = 'deepesh';
+        const { userName } = res.locals;
         const mood = await Emoji.findAll({
             where: {
                 userName,
@@ -37,7 +37,8 @@ exports.moodSummary = async (req, res) => {
 };
 
 exports.moodLog = async (req, res) => {
-    const { emoji, notes, userName } = req.body;
+    const { emoji, notes } = req.body;
+    const { userName } = res.locals;
 
     try {
         console.log(emoji,notes,userName);
