@@ -148,3 +148,33 @@ exports.moodData = async (req,res) => {
         return res.status(500).json({ status: false, message: 'Server Error' });
     } 
 }
+
+exports.getAllMood = async (req,res) => {
+    try {
+
+        const {sort,start, end} = req.query;
+        const startDate = new Date(start);
+        const endDate = new Date(end);
+        
+        const { userName } = res.locals;
+        const mood = await Mood.findAll({
+            where: {
+                userName,
+                createdAt: {
+                    [Op.between]: [startDate,endDate]
+                    // [Op.between]: ["2023-09-01T00:00:00.000Z","2023-09-30T23:59:59.000Z"]
+                }
+            },
+            order: [["createdAt", sort.toUpperCase()]]
+        });
+        // console.log(mood.dataValues.date);
+        if(mood) {
+            return res.status(201).json({ status: true, mood });    
+        }
+        return res.status(400).json({ status: true, message: 'Mood retreival failed' });
+
+    } catch(err) {
+        console.log(err);
+        return res.status(500).json({ status: false, message: 'Server Error' });
+    }
+}
