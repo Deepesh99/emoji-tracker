@@ -60,3 +60,38 @@ exports.toggleSharing = async (req, res) => {
         return res.status(500).json({ status: false, message: 'Server Error' });
     }
 }
+
+exports.moodStats = async (req, res) => {
+    try {
+        const {userName} = res.locals;
+        const userMood = await Mood.findAll({attributes:['emoji'], where: {userName}});
+
+        // console.log(userMood[0].dataValues.);
+
+        let hashMap = {}
+        for(let i=0; i< userMood.length; i++) {
+            if(userMood[i].dataValues.emoji in hashMap ){
+        
+                //up the prev count
+                hashMap[userMood[i].dataValues.emoji] = hashMap[userMood[i].dataValues.emoji] + 1; 
+                
+                }else{
+                hashMap[userMood[i].dataValues.emoji] = 1;
+                }
+        }
+
+        let outputArray = []
+        Object.keys(hashMap).forEach(key => {
+        
+            outputArray.push({
+                key,
+                count: hashMap[key]
+            })
+        })
+        // console.log(outputArray);
+        return res.status(200).json({ status: true, message: outputArray});
+    } catch(err) {
+        console.log(err);
+        return res.status(500).json({ status: false, message: 'Server Error' });
+    }
+}
