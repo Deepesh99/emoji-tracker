@@ -49,7 +49,18 @@ exports.moodSummary = async (req, res) => {
 exports.moodLog = async (req, res) => {
   const { emoji, notes } = req.body;
   const { userName } = res.locals;
-  const value = 2;
+  let value;
+  if (emoji === 'U+1f62d') {
+    value = 0;
+  } else if (emoji === 'U+2639') {
+    value = 2;
+  } else if (emoji === 'U+1f610') {
+    value = 5;
+  } else if (emoji === 'U+1f603') {
+    value = 8;
+  } else if (emoji === 'U+1f929') {
+    value = 10;
+  }
   try {
     console.log(emoji, notes, userName);
     const newMood = await Mood.create({
