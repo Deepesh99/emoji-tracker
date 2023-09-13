@@ -3,6 +3,12 @@ const jwt = require('jsonwebtoken');
 
 const User = require('../schema/user');
 
+/**
+ * This function is used for user registration
+ * @param {*} req - takes name, password and userName from request body
+ * @param {*} res 
+ * @returns success/failure response based on result of user creation in db
+ */
 exports.register = async (req, res) => {
   const { name, password, userName } = req.body;
 
@@ -34,6 +40,12 @@ exports.register = async (req, res) => {
   }
 };
 
+/**
+ * 
+ * @param {*} req - takes userName an password from request body
+ * @param {*} res 
+ * @returns jwt token on success
+ */
 exports.login = async (req, res) => {
   const { userName, password } = req.body;
 

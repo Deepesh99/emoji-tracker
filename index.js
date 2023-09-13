@@ -2,14 +2,15 @@ const express = require('express');
 
 const db = require('./config/db');
 
+// Importing Schema
 const User = require('./schema/user');
 const Mood = require('./schema/mood');
 
+// Creating association
 User.hasMany(Mood, {
   onDelete: 'CASCADE',
   foreignKey: 'userName',
 });
-// Emoji.hasOne(User);
 
 const app = express();
 
@@ -17,6 +18,7 @@ const routesIndexV1 = require('./routes/v1/routeindex');
 
 app.use(express.json());
 
+// CORS
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader(

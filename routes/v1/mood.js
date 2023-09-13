@@ -12,6 +12,7 @@ const {
 
 const { authorization } = require('../../middleware/auth');
 
+// authorization is a middleware that ensures user is logged in before performing any action
 router
   .get('/summary', authorization, moodSummary)
   .post('/log', authorization, moodLog)

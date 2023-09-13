@@ -1,8 +1,13 @@
 const Sentiment = require('sentiment');
 const { Op } = require('sequelize');
-const User = require('../schema/user');
 const Mood = require('../schema/mood');
 
+/**
+ *  This function gives a summary on mood for a particular month
+ * @param {*} req - takes year and month fron request
+ * @param {*} res 
+ * @returns mood summary
+ */
 exports.moodSummary = async (req, res) => {
   try {
     // TODO: work on date
@@ -35,6 +40,12 @@ exports.moodSummary = async (req, res) => {
   }
 };
 
+/**
+ * This function takes users mood data and enter to db
+ * @param {*} req - takes emoji and notes from body
+ * @param {*} res 
+ * @returns status message 
+ */
 exports.moodLog = async (req, res) => {
   const { emoji, notes } = req.body;
   const { userName } = res.locals;
@@ -50,13 +61,19 @@ exports.moodLog = async (req, res) => {
     if (newMood) {
       return res.status(201).json({ status: true, message: 'Mood Logged' });
     }
-    return res.status(400).json({ status: true, message: 'Loggin Failed' });
+    return res.status(400).json({ status: true, message: 'Logging Failed' });
   } catch (err) {
     console.log(err);
     return res.status(500).json({ status: false, message: 'Server Error' });
   }
 };
 
+/**
+ * This function helps to update previously logged mood
+ * @param {*} req - take emoji and notes form request
+ * @param {*} res 
+ * @returns status message after update
+ */
 exports.moodUpdate = async (req, res) => {
   try {
     const mood_id = req.params.id;
@@ -74,6 +91,12 @@ exports.moodUpdate = async (req, res) => {
   }
 };
 
+/**
+ * This function helps to delete mood entry from db
+ * @param {*} req - takes mood_id from request
+ * @param {*} res 
+ * @returns status message after deletion
+ */
 exports.moodDelete = async (req, res) => {
   try {
     const { mood_id } = req.body;
@@ -89,12 +112,22 @@ exports.moodDelete = async (req, res) => {
   }
 };
 
+/**
+ * This function uses sentiment analysis library to convert text to emoji and suggest emoji to users based on notes
+ * @param {*} req - text from user notes
+ * @param {*} res 
+ * @returns emoji based on notes
+ */
 exports.getEmoji = async (req, res) => {
   try {
     const { text } = req.body;
+
+    // using sentiment analysis library to get a score between -5 and +5
     const sentiment = new Sentiment();
     const result = sentiment.analyze(text);
-    const score = result.score + 5;
+    const score = result.score + 5; // addeding 5 to bring in 0-10 range
+
+    // get emoji based on score
     let emoji;
     if (score < 2) {
       emoji = 'U+1f62d';

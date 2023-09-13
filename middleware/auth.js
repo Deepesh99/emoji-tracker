@@ -1,11 +1,20 @@
 const jwt = require('jsonwebtoken');
 
+/**
+ * This is a middleware that ensures user is logged in before performing any action
+ * @param {*} req - user jwt token from headers
+ * @param {*} res 
+ * @param {*} next - goes to next controller function in flow
+ * @returns  response error if user is not logged in or token is expired
+ */
 exports.authorization = (req, res, next) => {
   // TODO: encrypt secret
   const secret = 'thisisjwttoken12345';
 
   try {
     const authToken = req.headers.token;
+
+    // return the request if user is not logged in
     if (authToken === undefined) {
       return res.status(401).json({ status: false, message: 'Please login' });
     }

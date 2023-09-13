@@ -3,16 +3,23 @@ const { Op } = require('sequelize');
 const Mood = require('../schema/mood');
 const User = require('../schema/user');
 
+/**
+ * This function returns aggregated moos of user based on history for mood board
+ * @param {*} req - takes username from request
+ * @param {*} res 
+ * @returns emoji based on aggregated score of mood history
+ */
 exports.moodBoard = async (req, res) => {
   try {
     const { userName } = req.params;
 
+    // get average of users mood value which can be used as mood score of history
     const moodValue = await Mood.findAll({
       attributes: [[Sequelize.fn('avg', Sequelize.col('value')), 'rating']],
       where: { userName },
     });
     const { rating } = moodValue[0].dataValues.rating;
-    let emoji;
+    let emoji; // assign emoji based on rating
     if (rating < 2) {
       emoji = 'U+1f62d';
     } else if (rating < 4) {
@@ -31,9 +38,15 @@ exports.moodBoard = async (req, res) => {
   }
 };
 
+/**
+ * This function is used to get user's mood history if sharing is enabled
+ * @param {*} req - takes username from request
+ * @param {*} res 
+ * @returns desired users mood history is sharing is enabled
+ */
 exports.moodHistory = async (req, res) => {
   try {
-    const visitor = res.locals.userName;
+    // const visitor = res.locals.userName;
     const { userName } = req.body;
     const user = await User.findOne({
       attributes: ['isSharing'],
@@ -60,12 +73,18 @@ exports.moodHistory = async (req, res) => {
   }
 };
 
+/**
+ * This function is used to toggling sharing status of user's mood histor
+ * @param {*} req 
+ * @param {*} res 
+ * @returns staus message after changes
+ */
 exports.toggleSharing = async (req, res) => {
   try {
     const { userName } = res.locals;
     const { value } = req.body;
     const isSharing = value.toLowerCase() === 'true';
-    console.log(isSharing);
+
     await User.update({ isSharing }, { where: { userName } });
     return res
       .status(201)
@@ -76,6 +95,12 @@ exports.toggleSharing = async (req, res) => {
   }
 };
 
+/**
+ * This function is used to get mood stats over time
+ * @param {*} req 
+ * @param {*} res 
+ * @returns return mood stats overtime
+ */
 exports.moodStats = async (req, res) => {
   try {
     const { userName } = res.locals;
@@ -84,18 +109,17 @@ exports.moodStats = async (req, res) => {
       where: { userName },
     });
 
-    // console.log(userMood[0].dataValues.);
-
+    // create hashmap to count occurence of emoji
     const hashMap = {};
     for (let i = 0; i < userMood.length; i += 1) {
       if (userMood[i].dataValues.emoji in hashMap) {
-        // up the prev count
         hashMap[userMood[i].dataValues.emoji] += 1;
       } else {
         hashMap[userMood[i].dataValues.emoji] = 1;
       }
     }
 
+    // convert hashmap to array
     const outputArray = [];
     Object.keys(hashMap).forEach((key) => {
       outputArray.push({
@@ -103,7 +127,7 @@ exports.moodStats = async (req, res) => {
         count: hashMap[key],
       });
     });
-    // console.log(outputArray);
+
     return res.status(200).json({ status: true, message: outputArray });
   } catch (err) {
     console.log(err);
@@ -111,6 +135,12 @@ exports.moodStats = async (req, res) => {
   }
 };
 
+/**
+ * This function visualizes mood data in emoji format for current month
+ * @param {*} req 
+ * @param {*} res 
+ * @returns X and Y values using which chart can be plotted
+ */
 exports.moodData = async (req, res) => {
   try {
     const date = new Date();
@@ -126,7 +156,8 @@ exports.moodData = async (req, res) => {
         },
       },
     });
-    console.log(mood[0].dataValues);
+
+    // creating a hashmap to get count of all emojies used in month
     const hashMap = {
       'U+1f62d': 0,
       'U+2639': 0,
@@ -149,6 +180,8 @@ exports.moodData = async (req, res) => {
         count: hashMap[key],
       });
     });
+
+    // get x and y values 
     const xValues = [];
     const yValues = [];
     for (let i = 0; i < outputArray.length; i += 1) {
@@ -167,6 +200,12 @@ exports.moodData = async (req, res) => {
   }
 };
 
+/**
+ * This function is used for sorting and filtering
+ * @param {*} req - takes sort, start(startdate), and end(enddate) from request
+ * @param {*} res 
+ * @returns mood data for specified timefrom in desired order
+ */
 exports.getAllMood = async (req, res) => {
   try {
     const { sort, start, end } = req.query;
@@ -182,7 +221,7 @@ exports.getAllMood = async (req, res) => {
           [Op.between]: [startDate, endDate],
         },
       },
-      order: [['createdAt', sort.toUpperCase()]],
+      order: [['createdAt', sort.toUpperCase()]], // apply sort- asc or desc
     });
 
     if (mood) {
