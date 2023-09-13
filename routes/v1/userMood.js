@@ -15,7 +15,7 @@ const {
 router
   .get('/stats', authorization, moodStats)
   .get('/data', authorization, moodData)
-  .get('/history', authorization, moodHistory)
+  .get('/history/:userName', authorization, moodHistory)
   .get('/:userName', moodBoard)
   .patch('/toggle-sharing', authorization, toggleSharing)
   .get('/', authorization, getAllMood);

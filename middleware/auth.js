@@ -26,7 +26,6 @@ exports.authorization = (req, res, next) => {
       return res.status(401).json({ status: false, message: 'Login expired' });
     }
     res.locals.userName = tokenData.userName;
-    console.log(res.locals.userName);
     return next();
   } catch (err) {
     return res.status(401).json({ status: false, message: `${err.name}` });

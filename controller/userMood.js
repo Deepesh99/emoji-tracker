@@ -47,13 +47,13 @@ exports.moodBoard = async (req, res) => {
 exports.moodHistory = async (req, res) => {
   try {
     // const visitor = res.locals.userName;
-    const { userName } = req.body;
+    const { userName } = req.params;
     const user = await User.findOne({
       attributes: ['isSharing'],
       where: { userName },
     });
 
-    const { isSharing } = user.dataValues.isSharing;
+    const { isSharing } = user.dataValues;
     if (!isSharing) {
       return res
         .status(400)
