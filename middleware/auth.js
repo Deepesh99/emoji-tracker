@@ -6,8 +6,8 @@ exports.authorization = (req, res, next) => {
 
   try {
     const authToken = req.headers.token;
-    if(authToken === undefined) {
-        return res.status(401).json({ status: false, message: 'Please login' });
+    if (authToken === undefined) {
+      return res.status(401).json({ status: false, message: 'Please login' });
     }
     const tokenData = jwt.verify(authToken, secret);
 

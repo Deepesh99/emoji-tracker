@@ -6,8 +6,8 @@ const User = require('./schema/user');
 const Mood = require('./schema/mood');
 
 User.hasMany(Mood, {
-    onDelete: 'CASCADE',
-    foreignKey: 'userName',
+  onDelete: 'CASCADE',
+  foreignKey: 'userName',
 });
 // Emoji.hasOne(User);
 
@@ -18,20 +18,23 @@ const routesIndexV1 = require('./routes/v1/routeindex');
 app.use(express.json());
 
 app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    next();
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader(
+    'Access-Control-Allow-Methods',
+    'GET, POST, PUT, PATCH, DELETE',
+  );
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  next();
 });
 
-app.use('/v1', routesIndexV1)
+app.use('/v1', routesIndexV1);
 
 db
-// .sync({ force: true })
-.sync()
-.then(() => {
-  app.listen(3000);
-})
-.catch((err) => {
-  console.error(err);
-});
+  // .sync({ force: true })
+  .sync()
+  .then(() => {
+    app.listen(3000);
+  })
+  .catch((err) => {
+    console.error(err);
+  });

@@ -17,7 +17,7 @@ const User = sequelize.define('user', {
   isSharing: {
     type: Sequelize.BOOLEAN,
     defaultValue: false,
-  }
+  },
 });
 
-module. exports = User;
+module.exports = User;

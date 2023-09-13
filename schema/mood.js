@@ -18,7 +18,7 @@ const Mood = sequelize.define('mood', {
   value: {
     type: Sequelize.INTEGER,
     allowNull: false,
-  }
+  },
 });
 
 module.exports = Mood;
