@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express');
 
 const db = require('./config/db');
@@ -35,7 +37,8 @@ db
   // .sync({ force: true })
   .sync()
   .then(() => {
-    app.listen(3000);
+    console.log('DB connected!!');
+    app.listen(process.env.PORT);
   })
   .catch((err) => {
     console.error(err);

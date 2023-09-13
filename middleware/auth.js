@@ -1,3 +1,4 @@
+require('dotenv').config();
 const jwt = require('jsonwebtoken');
 
 /**
@@ -8,8 +9,8 @@ const jwt = require('jsonwebtoken');
  * @returns  response error if user is not logged in or token is expired
  */
 exports.authorization = (req, res, next) => {
-  // TODO: encrypt secret
-  const secret = 'thisisjwttoken12345';
+
+  const secret = process.env.SECRET;
 
   try {
     const authToken = req.headers.token;

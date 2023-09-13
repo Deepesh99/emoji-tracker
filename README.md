@@ -39,4 +39,4 @@ A robust Emoji Mood Tracker API using Node.js, Express.js, and Sequelize. This A
 - dotenv - inject credentials into code
 - eslint - To enforce code standard (dev)
 - prettier - For code formating (dev)
-- nodemon - For help with development
+- nodemon - For help with development (dev)

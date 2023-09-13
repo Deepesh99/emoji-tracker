@@ -1,3 +1,4 @@
+require('dotenv').config();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
@@ -56,7 +57,7 @@ exports.login = async (req, res) => {
     if (user && validUser) {
       // create jwt tokens
       // scret is used to create hash. TODO: encrypt secret
-      const secret = 'thisisjwttoken12345';
+      const secret = process.env.SECRET;
 
       // token will have userid and expire in 30days
       const token = jwt.sign({ userName }, secret, { expiresIn: '7 days' });
